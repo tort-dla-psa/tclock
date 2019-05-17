@@ -66,6 +66,7 @@ void tclock::make_arrows(){
 void tclock::update_arrow(struct arrow &a, unsigned int current){
 	a.rad = pi/-2. + 2.*pi / a.max * current;
 }
+
 void tclock::draw_arrow(const struct arrow a){
 	const int x1 = (int)(a.x + a.w/2.*std::cos(a.rad-pi/2.));
 	const int y1 = (int)(a.y + a.w/2.*std::sin(a.rad-pi/2.));
@@ -86,6 +87,11 @@ tclock::tclock(unsigned int w, unsigned int h)
 {
 	make_arrows();
 }
+
+tclock::tclock(const tclock &c)
+	:tclock(c.get_w(), c.get_h())
+{}
+
 void tclock::update(){
 	time_t now = time(0);
 	tm *ltm = localtime(&now);
@@ -96,15 +102,18 @@ void tclock::update(){
 	update_arrow(M,mins*60);
 	update_arrow(S,secs);
 }
+
 void tclock::draw(){
 	draw_arrows();
 	draw_seconds();
 }
+
 void tclock::draw_arrows(){
 	draw_arrow(H);
 	draw_arrow(M);
 	draw_arrow(S);
 }
+
 void tclock::draw_seconds(){
 	int l = std::min(w,h);
 	for(double i=0; i < 2.*pi; i += 2.*pi/30){
@@ -114,12 +123,15 @@ void tclock::draw_seconds(){
 			h/2+(l/2)*std::sin(i));
 	}
 }
+
 unsigned int tclock::get_w()const{
 	return w;
 }
+
 unsigned int tclock::get_h()const{
 	return h;
 }
+
 void tclock::operator=(const tclock &c){
 	this->w = c.get_w();
 	this->h = c.get_h();
@@ -138,7 +150,7 @@ void wait_func(){
 	end_requested = true;
 }
 
-bool check(bool &flag, int &param, char* arg){
+inline bool check(bool &flag, int &param, char* arg){
 	if(flag){
 		param = std::stoi(arg);
 		flag = false;

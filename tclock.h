@@ -17,6 +17,7 @@ class tclock{
 	unsigned int w,h;
 public:
 	tclock(unsigned int w, unsigned int h);
+	tclock(const tclock &c);
 	void update();
 	void draw();
 	unsigned int get_w()const;
